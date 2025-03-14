@@ -1,0 +1,56 @@
+<html>
+<head>
+    <title>API Assignment</title>
+</head>
+<body>
+
+    <h1>CS 20 API Assignment</h1>
+    <h4>Darrien Johnsen</h4>
+
+    <h3>Postman Screenshot:</h3>
+    <img src="postmanscreenshot.png" alt="Postman Screenshot" style="width:900px;height:1000px">
+
+    <h2>Recipe Search Results:</h2>
+    <div id="output">Getting some tasty recipes for you:<div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var query = "pasta";
+            var url = "https://www.themealdb.com/api/json/v1/1/search.php?s=" + query;
+
+            fetch(url)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    var outputDiv = document.getElementById("output");
+                    outputDiv.innerHTML = "";
+                    if (!data.meals) {
+                        outputDiv.innerHTML = "<p>No recipes found for '" + query + "'.</p>";
+                        return;
+                    }
+
+                    var recipesHTML = "<h2>Recipes for '" + query + "'</h2>";
+
+                    for (var i = 0; i < Math.min(data.meals.length, 5); i++) { // Show only 5 recipes
+                        var meal = data.meals[i];
+
+                        recipesHTML += `
+                            <div class="recipe">
+                                <h3>${meal.strMeal}</h3>
+                                <p><strong>Category:</strong> ${meal.strCategory}</p>
+                                <p><strong>Instructions:</strong> ${meal.strInstructions.substring(0, 200)}...</p>
+                                <p><a href="${meal.strSource}" target="_blank">Full Recipe</a></p>
+                                <img src="${meal.strMealThumb}" alt="Meal Image">
+                            </div>
+                        `;
+                    }
+
+                    outputDiv.innerHTML = recipesHTML;
+                })
+        });
+    </script>
+
+   
+</body>
+</html>
